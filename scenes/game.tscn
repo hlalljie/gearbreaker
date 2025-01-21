@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://cgsgaqigbenpx"]
+
+[ext_resource type="Texture2D" uid="uid://bbemx586od7l" path="res://assets/placeholders/map_placeholder.jpg" id="1_lksyr"]
+[ext_resource type="Script" path="res://scenes/Player.cs" id="2_jyt0v"]
+[ext_resource type="Texture2D" uid="uid://ppi1enpjvknp" path="res://assets/placeholders/green_tile_placeholder.png" id="3_mjgbk"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_ksiwg"]
+
+[node name="Game" type="Node2D"]
+
+[node name="Map" type="Node2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="Map"]
+texture = SubResource("ImageTexture_ksiwg")
+
+[node name="MapPlaceholder" type="Sprite2D" parent="Map"]
+texture = ExtResource("1_lksyr")
+
+[node name="MainMusic" type="AudioStreamPlayer" parent="."]
+
+[node name="Player" type="CharacterBody2D" parent="."]
+script = ExtResource("2_jyt0v")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+texture = ExtResource("3_mjgbk")
