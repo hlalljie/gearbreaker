@@ -1,3 +1,5 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+.vs/Gearbreaker/xs/UserPrefs.xml
+.vs/Gearbreaker/xs/project-cache/Gearbreaker-Debug.json

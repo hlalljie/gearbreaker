@@ -3,10 +3,28 @@ using Godot;
 
 public partial class Player : CharacterBody2D
 {
+	public AnimationPlayer AnimPlayer;
 	public const float Speed = 300.0f;
 
-	public override void _PhysicsProcess(double delta)
+	public enum CharacterActions {
+		none,
+		idle,
+		walk,
+		run,
+		bite
+	}
+
+    public override void _Ready()
+    {
+		AnimPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
+    }
+
+    public override void _PhysicsProcess(double delta)
 	{
+		HandleMovement(delta);
+	}
+	public void HandleMovement(double delta){
+
 		Vector2 velocity = Velocity;
 
 		// Get the input direction and handle the movement/deceleration.
@@ -16,6 +34,8 @@ public partial class Player : CharacterBody2D
 		{
 			velocity.X = direction.X * Speed;
 			velocity.Y = direction.Y * Speed;
+
+			HandleAnim(CharacterActions.none);
 		}
 		else
 		{
@@ -25,5 +45,12 @@ public partial class Player : CharacterBody2D
 
 		Velocity = velocity;
 		MoveAndSlide();
+	}
+	public void HandleAnim(CharacterActions type){
+
+		switch(type){
+			case CharacterActions.idle:
+			break;
+		}
 	}
 }
