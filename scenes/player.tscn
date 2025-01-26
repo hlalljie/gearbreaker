@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://bgg1025njrhw3"]
+[gd_scene load_steps=4 format=3 uid="uid://bsqqij35kkvxw"]
 
 [ext_resource type="Script" path="res://scripts/Player.cs" id="1_vglux"]
 [ext_resource type="Texture2D" uid="uid://ppi1enpjvknp" path="res://assets/placeholders/green_tile_placeholder.png" id="2_52jj1"]

@@ -3,7 +3,7 @@ using Godot;
 
 public partial class Game : Node2D
 {
-	private PanelContainer MainMenu;
+	private CanvasLayer MenuCanvas;
 	private LineEdit AddressEntry;
 
 	private const int Port = 9999;
@@ -12,9 +12,9 @@ public partial class Game : Node2D
 
 	public override void _Ready()
 	{
-		MainMenu = GetNode<PanelContainer>("CanvasLayer/MainMenu");
+		MenuCanvas = GetNode<CanvasLayer>("MenuCanvas");
 		AddressEntry = GetNode<LineEdit>(
-			"CanvasLayer/MainMenu/MarginContainer/VBoxContainer/AddressEntry"
+			"MenuCanvas/MainMenu/MarginContainer/VBoxContainer/AddressEntry"
 		);
 		EnetPeer = new ENetMultiplayerPeer();
 	}
@@ -22,7 +22,7 @@ public partial class Game : Node2D
 	// Hooked to the Host Button pressed signal
 	public void OnHostButtonPressed()
 	{
-		MainMenu.Hide();
+		MenuCanvas.Hide();
 
 		EnetPeer.CreateServer(Port);
 		Multiplayer.MultiplayerPeer = EnetPeer;
@@ -36,7 +36,7 @@ public partial class Game : Node2D
 	// Hooked to the Join Button pressed signal
 	public void OnJoinButtonPressed()
 	{
-		MainMenu.Hide();
+		MenuCanvas.Hide();
 
 		EnetPeer.CreateClient("localhost", Port);
 		Multiplayer.MultiplayerPeer = EnetPeer;
