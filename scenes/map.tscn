@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=4 uid="uid://bxwmdcboabooa"]
+[gd_scene load_steps=4 format=4 uid="uid://c1efuotnnbnvj"]
 
 [ext_resource type="TileSet" uid="uid://cunarrg0jexdg" path="res://assets/tilesets/obstacles.tres" id="1_oj136"]
 [ext_resource type="Script" path="res://scripts/SpinningMap.cs" id="2_mvidd"]
