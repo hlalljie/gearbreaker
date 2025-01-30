@@ -44,10 +44,14 @@ public partial class Player : CharacterBody2D
 	// when set to true this input will be called on next update
 	bool callIdle, callWalk, callRun, callAtt1, callAtt2, callAtt3, callAtt4, callDodge, callDie;
 
-		
+	public float WalkSpeed = 60.0f;
 
-	public const float WalkSpeed = 60.0f;
+	/*
+						// INSTRUCTIONS //
+		Call this Method to set the player type and start the script
+		 --> InitializeAnimation(CharacterType type)
 
+	*/
 
     public override void _Ready()
     {
@@ -87,9 +91,19 @@ public partial class Player : CharacterBody2D
 
 				CharType = type;
 				SetAnim(ActionStateType.idle);
+				WalkSpeed = 60;
+
 				isInitialized = true;
 				break;
 
+			case CharacterType.Player:
+
+				CharType = type;
+				SetAnim(ActionStateType.idle);
+				WalkSpeed = 120;
+
+				isInitialized = true;
+				break;
 			default:
 				GD.Print("Tried to initialize animation but " + type.ToString() + " is not yet supported.");
 				return;
@@ -104,24 +118,18 @@ public partial class Player : CharacterBody2D
 			CountTime();
 		}
 	}
-	public void HandlerAnimationCall(ActionStateType type) {
-
-			// Detect input and start new action
-
-			if (CharType == CharacterType.Dragon){
-
-				//Bite
-				if (type == ActionStateType.attack1){
-					callAtt1 = true;
-				} else if (type == ActionStateType.attack2){
-					callAtt2 = true;
-				}
-			}
-	}
+	
 	void CheckInputBools(){
 
 		// This should be coppied to be identical to the "ActionStateType_Decoder()" switch() list
 		 bool resetBools = false;
+
+		// ReadInput
+		if (Input.IsActionPressed("Attack1")){
+			callAtt1 = true;
+		} else if (Input.IsActionPressed("Attack2")){
+			callAtt2 = true;
+		}
 
 		if (CharType == CharacterType.Dragon){
 			if (callIdle){

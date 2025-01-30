@@ -164,7 +164,5 @@ libraries = {
 "": SubResource("AnimationLibrary_k3shr")
 }
 
-[node name="TestScript" type="Node" parent="BossPlayer"]
+[node name="TestMovementScript" type="Node" parent="BossPlayer"]
 script = ExtResource("4_538x3")
-
-[node name="AnimationSignal" type="Node" parent="."]
