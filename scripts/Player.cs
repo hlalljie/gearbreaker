@@ -25,7 +25,7 @@ public partial class Player : CharacterBody2D
 	int previousFrameY = 0;
 
 	// for attacks that need to play out before allowing changed action
-	// speed will be reduced to 1/2
+	// speed will be reduced speed * 0.2f
 	bool lockDirection = false; 
 
 	// set to true if other actions should not be permitted
@@ -89,7 +89,6 @@ public partial class Player : CharacterBody2D
 				// check if animation needs to play out before returning to movable state
 				actionQueued = false;
 				requestActionCancel = true;
-				
 			}
 			
 			AnimTimer();
@@ -180,8 +179,8 @@ public partial class Player : CharacterBody2D
 				velocity.X = direction.X * WalkSpeed;
 				velocity.Y = direction.Y * WalkSpeed;
 			} else {
-				velocity.X = direction.X * WalkSpeed * 0.1f;
-				velocity.Y = direction.Y * WalkSpeed * 0.1f;
+				velocity.X = direction.X * WalkSpeed * 0.2f;
+				velocity.Y = direction.Y * WalkSpeed * 0.2f;
 			}
 		}
 		else
@@ -194,10 +193,6 @@ public partial class Player : CharacterBody2D
 		MoveAndSlide();
 	}
 	void HandleAnim(){
-		
-		//DEBUG
-		GD.Print(isSprite1 + "\n" + actionType.ToString() + " " + animClock.ToString());
-		//DEBUG
 
 		// Sprite to handle
 		Sprite2D setSprite;
@@ -209,13 +204,22 @@ public partial class Player : CharacterBody2D
 			
 			//zero detected :: -0.70710677, -0.70710677
 			if (setSprite.FrameCoords.Y == 0){
-				 
+				
+				if (isSprite1){
 				CharSprite1.Frame = animClock;
+				CharSprite2.Frame = 0;
+				} else {
+				CharSprite1.Frame = 0;
 				CharSprite2.Frame = animClock;
+				}
 			} else{
-				 
+				if (isSprite1) {
 				CharSprite1.Frame = CharSprite1.FrameCoords.Y * CharSprite1.Hframes + animClock;
+				CharSprite2.Frame = CharSprite2.FrameCoords.Y * CharSprite2.Hframes;
+				} else {
+				CharSprite1.Frame = CharSprite1.FrameCoords.Y * CharSprite1.Hframes;
 				CharSprite2.Frame = CharSprite2.FrameCoords.Y * CharSprite2.Hframes + animClock;
+				}
 			}
 			return;
 		}
@@ -223,14 +227,22 @@ public partial class Player : CharacterBody2D
 		//is character allowed to turn
 		if (lockDirection){
 			if (previousFrameY == 0){
-				 
+				if (isSprite1){
 				CharSprite1.Frame = animClock;
+				CharSprite2.Frame = 0;
+				} else {
+				CharSprite1.Frame = 0;
 				CharSprite2.Frame = animClock;
 				}
+				}
 			else
-				 
+				if (isSprite1){
 				CharSprite1.Frame = previousFrameY * CharSprite1.Hframes + animClock;
+				CharSprite2.Frame = previousFrameY * CharSprite2.Hframes;
+				} else {
+				CharSprite1.Frame = previousFrameY * CharSprite1.Hframes;
 				CharSprite2.Frame = previousFrameY * CharSprite2.Hframes + animClock;
+				}
 			return;
 		}
 
@@ -393,9 +405,11 @@ public partial class Player : CharacterBody2D
 						setSprite.Hframes = 20;
 
 						if (isSprite1 == false){
+							
 							CharSprite1.Visible = false;
 							CharSprite2.Visible = true;
 						} else {
+							
 							CharSprite2.Visible = false;
 							CharSprite1.Visible = true;
 						}
@@ -425,9 +439,11 @@ public partial class Player : CharacterBody2D
 						setSprite.Hframes = 10;
 
 						if (isSprite1 == false){
+							
 							CharSprite1.Visible = false;
 							CharSprite2.Visible = true;
 						} else {
+							
 							CharSprite2.Visible = false;
 							CharSprite1.Visible = true;
 						}
@@ -456,9 +472,11 @@ public partial class Player : CharacterBody2D
 						setSprite.Hframes = 20;
 
 						if (isSprite1 == false){
+							
 							CharSprite1.Visible = false;
 							CharSprite2.Visible = true;
 						} else {
+							
 							CharSprite2.Visible = false;
 							CharSprite1.Visible = true;
 						}
