@@ -1,8 +1,9 @@
-[gd_scene load_steps=12 format=3 uid="uid://cgsgaqigbenpx"]
+[gd_scene load_steps=13 format=3 uid="uid://cgsgaqigbenpx"]
 
 [ext_resource type="Texture2D" uid="uid://bbemx586od7l" path="res://assets/placeholders/map_placeholder.jpg" id="1_lksyr"]
 [ext_resource type="Script" path="res://scripts/Player.cs" id="2_spj6t"]
 [ext_resource type="Texture2D" uid="uid://dr1hnm2kb6dgc" path="res://assets/sprite_sheets/Dragon/Bite/bite_draBody1.png" id="3_euqni"]
+[ext_resource type="Script" path="res://scripts/TestInput.cs" id="4_538x3"]
 
 [sub_resource type="ImageTexture" id="ImageTexture_ksiwg"]
 
@@ -162,3 +163,8 @@ root_node = NodePath("../Sprite1")
 libraries = {
 "": SubResource("AnimationLibrary_k3shr")
 }
+
+[node name="TestScript" type="Node" parent="BossPlayer"]
+script = ExtResource("4_538x3")
+
+[node name="AnimationSignal" type="Node" parent="."]

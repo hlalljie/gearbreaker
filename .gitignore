@@ -3,3 +3,5 @@
 /android/
 .vs/Gearbreaker/xs/UserPrefs.xml
 .vs/Gearbreaker/xs/project-cache/Gearbreaker-Debug.json
+scripts/TestInput.cs
+scenes/game.tscn

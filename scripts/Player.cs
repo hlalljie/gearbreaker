@@ -3,7 +3,10 @@ using Godot;
 
 public partial class Player : CharacterBody2D
 {
+	bool dbool = false;
 	int dint = 0; // DEBUG int for print messages
+
+	// AnimationSignal animSignal;
 
 	//Sprite 1&2 will switch on and off to change state without flickering
 	bool isSprite1 = true;
@@ -19,7 +22,7 @@ public partial class Player : CharacterBody2D
 	private const string _ROOT_PATH = "res://assets/sprite_sheets";
 
 	int animClock = 0;
-	bool animBool = true;
+	bool couterPause = true;
 
 	// used to set direction if sprite changed but prev angle is needed
 	int previousFrameY = 0;
@@ -37,11 +40,18 @@ public partial class Player : CharacterBody2D
 	//Animation will begin after values are set in InitializeAnimation()
 	bool isInitialized = false;
 
+	// INPUT BOOLS
+	// when set to true this input will be called on next update
+	bool callIdle, callWalk, callRun, callAtt1, callAtt2, callAtt3, callAtt4, callDodge, callDie;
+
+		
+
 	public const float WalkSpeed = 60.0f;
 
 
     public override void _Ready()
     {
+		// initialize
 		CharSprite1 = GetNode<Sprite2D>("/root/Game/BossPlayer/Sprite1");
 		CharSprite2 = GetNode<Sprite2D>("/root/Game/BossPlayer/Sprite2");
 		CharSprite1.Visible = false;
@@ -59,80 +69,128 @@ public partial class Player : CharacterBody2D
 		//Must be intialized first InitializeAnimation()
 		if (isInitialized){
 
-			// Detect input and start new action
-
-			//Bite
-			if (!actionQueued && Input.IsKeyPressed(Key.Shift)){ 
-				actionQueued = true;
-
-				if (actionType != ActionStateType.draBite){
-					SetAnim(ActionStateType.draBite);
-				}
-
-			} else if (actionQueued && Input.IsKeyPressed(Key.Shift) == false){
-				
-				// check if animation needs to play out before returning to movable state
-				actionQueued = false;
-				requestActionCancel = true;
-				
-			}
-			// Claw
-			if (!actionQueued && Input.IsKeyPressed(Key.Z)){ //Bite
-				actionQueued = true;
-
-				if (actionType != ActionStateType.draClaw){
-					SetAnim(ActionStateType.draClaw);
-				}
-
-			} else if (actionQueued && Input.IsKeyPressed(Key.Z) == false){
-				
-				// check if animation needs to play out before returning to movable state
-				actionQueued = false;
-				requestActionCancel = true;
-			}
-			
+			CheckInputBools();
 			AnimTimer();
 			HandleMovement(delta);
 		}
 	}
 
-	public void InitializeAnimation(CharacterType type_){
-		if (type_ == CharacterType.none){
+	public void InitializeAnimation(CharacterType type){
+		if (type == CharacterType.none){
 			GD.Print("Tried to initialize animation with no CharacterType.");
 			return;
 		}
 
-		switch(type_){
+		switch(type){
 
 			case CharacterType.Dragon:
 
-				CharType = type_;
-				SetAnim(ActionStateType.general);
+				CharType = type;
+				SetAnim(ActionStateType.idle);
 				isInitialized = true;
 				break;
 
 			default:
-				GD.Print("Tried to initialize animation but " + type_.ToString() + " is not yet supported.");
+				GD.Print("Tried to initialize animation but " + type.ToString() + " is not yet supported.");
 				return;
 		}
 	}
 
 	void AnimTimer(){
-		if (animBool){
+		if (couterPause){
 			//stop counter till CountTime() is finished
-			animBool = false;
+			couterPause = false;
 
 			CountTime();
 		}
 	}
+	public void HandlerAnimationCall(ActionStateType type) {
+
+			// Detect input and start new action
+
+			if (CharType == CharacterType.Dragon){
+
+				//Bite
+				if (type == ActionStateType.attack1){
+					callAtt1 = true;
+				} else if (type == ActionStateType.attack2){
+					callAtt2 = true;
+				}
+			}
+	}
+	void CheckInputBools(){
+
+		// This should be coppied to be identical to the "ActionStateType_Decoder()" switch() list
+		 bool resetBools = false;
+
+		if (CharType == CharacterType.Dragon){
+			if (callIdle){
+
+				resetBools = true;
+			} else if ( callWalk){
+
+				resetBools = true;
+			} else if (callRun){
+
+				resetBools = true;
+			} else if (callAtt1){
+
+				if (actionType != ActionStateType.attack1 && !lockDirection){
+					SetAnim(ActionStateType.attack1);
+					requestActionCancel = true;
+					actionQueued = false;
+
+				} else if (requestActionCancel == false && actionType == ActionStateType.attack1) {
+					actionQueued = true;
+				}
+
+				resetBools = true;
+			} else if (callAtt2){
+
+				if (actionType != ActionStateType.attack2 && !lockDirection){
+					SetAnim(ActionStateType.attack2);
+					requestActionCancel = true;
+					actionQueued = false;
+
+				} else if (requestActionCancel == false && actionType == ActionStateType.attack2) {
+					actionQueued = true;
+				}
+
+				resetBools = true;
+			} else if (callAtt3){
+
+				resetBools = true;
+			} else if (callAtt4){
+
+				resetBools = true;
+			} else if (callDodge){
+
+				resetBools = true;
+			} else if (callDie){
+
+				resetBools = true;
+			}
+		}
+
+		if (resetBools){
+			callIdle = false;
+			callWalk = false;
+			callRun = false;
+			callAtt1 = false;
+			callAtt2 = false;
+			callAtt3 = false;
+			callAtt4 = false;
+			callDodge = false;
+			callDie = false;
+		}
+	}
+
 	async void CountTime(){
 
 		bool actionChanged = false;
 		
 		await ToSignal(GetTree().CreateTimer(0.08f), "timeout");
 		
-		HandleAnim();
-
 		// Sprite to handle
 		Sprite2D setSprite;
 		if (isSprite1) setSprite = CharSprite1;
@@ -147,10 +205,14 @@ public partial class Player : CharacterBody2D
 					lockDirection = false;
 					actionChanged = true;
 					
-					SetAnim(ActionStateType.general);
-				}
-			} 
+					SetAnim(ActionStateType.idle);
+
+				} 
+			} else if (requestActionCancel == false) {
+				requestActionCancel = true;
+			}
 		}
+		HandleAnim();
 
 		// set sprite frame
 		if (!actionChanged) {
@@ -160,7 +222,7 @@ public partial class Player : CharacterBody2D
 
 
 		//allow counter to be called again
-		animBool = true;
+		couterPause = true;
 	}
 	public void HandleMovement(double delta){
 
@@ -173,8 +235,8 @@ public partial class Player : CharacterBody2D
 		{
 			if (!lockDirection){
 				
-				if (actionType != ActionStateType.draWalk)
-					SetAnim(ActionStateType.draWalk);
+				if (actionType != ActionStateType.walk)
+					SetAnim(ActionStateType.walk);
 
 				velocity.X = direction.X * WalkSpeed;
 				velocity.Y = direction.Y * WalkSpeed;
@@ -340,19 +402,18 @@ public partial class Player : CharacterBody2D
 		// each spritesheet has 5 sets one for each direction this never changes
 
 		if (CharType == CharacterType.Dragon){
-			if (type == ActionStateType.general) type = ActionStateType.draIdle;
-			
+
 			// Sprite to Alternate
 			Sprite2D setSprite = CharSprite1;
 
 			switch(type) {
-				case ActionStateType.draIdle:
+				case ActionStateType.idle:
 					
 					//DEBUG
 					// remove this once an idle anim is set
 
-					if (actionType != ActionStateType.draIdle){
-						actionType = ActionStateType.draIdle;
+					if (actionType != ActionStateType.idle){
+						actionType = ActionStateType.idle;
 
 						CharSprite1.Visible = false;
 						CharSprite2.Visible = false;
@@ -383,10 +444,10 @@ public partial class Player : CharacterBody2D
 					//DEBUG
 
 					break;
-				case ActionStateType.draWalk:
+				case ActionStateType.walk:
 
-					if (actionType != ActionStateType.draWalk){
-						actionType = ActionStateType.draWalk;
+					if (actionType != ActionStateType.walk){
+						actionType = ActionStateType.walk;
 
 						CharSprite1.Visible = false;
 						CharSprite2.Visible = false;
@@ -415,10 +476,10 @@ public partial class Player : CharacterBody2D
 						}
 					}
 					break;
-				case ActionStateType.draBite:
+				case ActionStateType.attack1:
 
-					if (actionType != ActionStateType.draBite){
-						actionType = ActionStateType.draBite;
+					if (actionType != ActionStateType.attack1){
+						actionType = ActionStateType.attack1;
 
 						CharSprite1.Visible = false;
 						CharSprite2.Visible = false;
@@ -449,10 +510,10 @@ public partial class Player : CharacterBody2D
 						}
 					}
 					break;
-				case ActionStateType.draClaw:
+				case ActionStateType.attack2:
 					
-					if (actionType != ActionStateType.draClaw){
-						actionType = ActionStateType.draClaw;
+					if (actionType != ActionStateType.attack2){
+						actionType = ActionStateType.attack2;
 
 						CharSprite1.Visible = false;
 						CharSprite2.Visible = false;
@@ -488,23 +549,105 @@ public partial class Player : CharacterBody2D
 			GD.Print("Nothing written for player yet.");
 		}
 	}
+
+	// Converts the ActinStateType into a reliably predictable number so 
+	//		the enum values can be added and rearanged without messing up anything
+	// If a new ActionStateType is added add it to both these Decoders
+	public ActionStateType ActionStateType_Decoder(int type) {
+		ActionStateType rValue = ActionStateType.none;
+
+		switch(type){
+			case 0:
+				rValue = ActionStateType.none;
+				break;
+			case 1:
+				rValue = ActionStateType.idle;
+				break;
+			case 2:
+				rValue = ActionStateType.walk;
+				break;
+			case 3:
+				rValue = ActionStateType.run;
+				break;
+			case 4:
+				rValue = ActionStateType.attack1;
+				break;
+			case 5:
+				rValue = ActionStateType.attack2;
+				break;
+			case 6:
+				rValue = ActionStateType.attack3;
+				break;
+			case 7:
+				rValue = ActionStateType.attack4;
+				break;
+			case 8:
+				rValue = ActionStateType.dodge;
+				break;
+			case 9:
+				rValue = ActionStateType.die;
+				break;
+		}
+		return rValue;
+	}
+	public int ActionStateType_Decoder(ActionStateType type) {
+		int rValue = -1;
+
+		switch(type){
+			case ActionStateType.none:
+				rValue = 0;
+				break;
+			case ActionStateType.idle:
+				rValue = 1;
+				break;
+			case ActionStateType.walk:
+				rValue = 2;
+				break;
+			case ActionStateType.run:
+				rValue = 3;
+				break;
+			case ActionStateType.attack1:
+				rValue = 4;
+				break;
+			case ActionStateType.attack2:
+				rValue = 5;
+				break;
+			case ActionStateType.attack3:
+				rValue = 6;
+				break;
+			case ActionStateType.attack4:
+				rValue = 7;
+				break;
+			case ActionStateType.dodge:
+				rValue = 8;
+				break;
+			case ActionStateType.die:
+				rValue = 9;
+				break;
+		}
+		return rValue;
+	}
 }
 public enum ActionStateType {
+	// If a new ActionStateType is added add it to -both- of the ActionStateType_Decoder() methods
+	// 		-AND- add to animBools at header in references
+	//		-AND- add to CheckInputBools() switch() statement
+	// all of these need to be written in the same order however the enums below can be organized in any order it doesnt matter
+
+		//(ref) idle,walk, run, attack1, attack2,  attack3, attack4, dodge, die
+
 		none,
 
-		//for any type of character to return to idle
-		general,
+		idle,
+		walk,
+		run,
+		attack1, 	// dragon-(bite) player-
+		attack2, 	// dragon-(claw) player-
+		attack3,	// dragon- 		player-
+		attack4, 	// dragon- 		player-
+		dodge,
+		die
 
-		// (dra)gon
-		draIdle,
-		draWalk,
-		draRun,
-		draBite,
-		draClaw
-
-		// (p1) playertype 1
-
-		// (p2) playertype 2
 
 	};
 	public enum AnimType {
