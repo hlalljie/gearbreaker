@@ -1,9 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://cgsgaqigbenpx"]
+[gd_scene load_steps=5 format=3 uid="uid://cgsgaqigbenpx"]
 
 [ext_resource type="Script" path="res://scripts/Game.cs" id="1_gy1k2"]
-[ext_resource type="Texture2D" uid="uid://bbemx586od7l" path="res://assets/placeholders/map_placeholder.jpg" id="1_lksyr"]
-
-[sub_resource type="ImageTexture" id="ImageTexture_ksiwg"]
+[ext_resource type="PackedScene" uid="uid://c1efuotnnbnvj" path="res://scenes/map.tscn" id="2_0qvsn"]
 
 [sub_resource type="Gradient" id="Gradient_pnbyx"]
 colors = PackedColorArray(0.362829, 0.36283, 0.362829, 1, 0.0798, 0.239907, 0.38, 1)
@@ -18,15 +16,9 @@ repeat = 2
 [node name="Game" type="Node2D"]
 script = ExtResource("1_gy1k2")
 
-[node name="Map" type="Node2D" parent="."]
-
-[node name="Sprite2D" type="Sprite2D" parent="Map"]
-texture = SubResource("ImageTexture_ksiwg")
-
-[node name="MapPlaceholder" type="Sprite2D" parent="Map"]
-texture = ExtResource("1_lksyr")
-
 [node name="MainMusic" type="AudioStreamPlayer" parent="."]
+
+[node name="Map" parent="." instance=ExtResource("2_0qvsn")]
 
 [node name="MenuCanvas" type="CanvasLayer" parent="."]
 

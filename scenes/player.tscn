@@ -9,6 +9,7 @@ properties/0/spawn = true
 properties/0/replication_mode = 1
 
 [node name="Player" type="CharacterBody2D"]
+z_index = 100
 script = ExtResource("1_vglux")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
