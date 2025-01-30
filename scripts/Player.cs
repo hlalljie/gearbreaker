@@ -53,8 +53,8 @@ public partial class Player : CharacterBody2D
 
 	*/
 
-    public override void _Ready()
-    {
+	public override void _Ready()
+	{
 		// initialize
 		CharSprite1 = GetNode<Sprite2D>("/root/Game/BossPlayer/Sprite1");
 		CharSprite2 = GetNode<Sprite2D>("/root/Game/BossPlayer/Sprite2");
@@ -66,9 +66,9 @@ public partial class Player : CharacterBody2D
 		// DEBUGGING 
 		InitializeAnimation(CharacterType.Dragon);
 		// DEBUGGING
-    }
+	}
 
-    public override void _PhysicsProcess(double delta)
+	public override void _PhysicsProcess(double delta)
 	{
 		//Must be intialized first InitializeAnimation()
 		if (isInitialized){
