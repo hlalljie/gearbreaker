@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://bsqqij35kkvxw"]
+[gd_scene load_steps=8 format=3 uid="uid://bsqqij35kkvxw"]
 
 [ext_resource type="Script" path="res://scripts/Player.cs" id="1_vglux"]
-[ext_resource type="Texture2D" uid="uid://ppi1enpjvknp" path="res://assets/placeholders/green_tile_placeholder.png" id="2_52jj1"]
+[ext_resource type="Texture2D" uid="uid://ppi1enpjvknp" path="res://Assets/placeholders/green_tile_placeholder.png" id="2_52jj1"]
+[ext_resource type="Script" path="res://scripts/Attack.cs" id="3_0huax"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_vms0b"]
 properties/0/path = NodePath(".:position")
@@ -11,12 +12,15 @@ properties/0/replication_mode = 1
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wlokx"]
 size = Vector2(30, 30)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_rliwe"]
+radius = 40.0
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3o4fx"]
 size = Vector2(32, 34)
 
 [node name="Player" type="CharacterBody2D"]
 z_index = 100
-collision_layer = 0
+collision_mask = 2
 script = ExtResource("1_vglux")
 
 [node name="Camera" type="Camera2D" parent="."]
@@ -32,7 +36,14 @@ shape = SubResource("RectangleShape2D_wlokx")
 
 [node name="AttackHolder" type="Node2D" parent="."]
 
+[node name="AttackInstance" type="Area2D" parent="AttackHolder" groups=["attack"]]
+script = ExtResource("3_0huax")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHolder/AttackInstance"]
+shape = SubResource("CircleShape2D_rliwe")
+
 [node name="HurtBox" type="Area2D" parent="."]
+collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
 shape = SubResource("RectangleShape2D_3o4fx")

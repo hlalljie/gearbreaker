@@ -1,17 +1,12 @@
 using Godot;
 using System;
 
-public partial class Bite : Area2D
+public partial class Bite : Attack // ✅ Inherit from Attack instead of Area2D
 {
-	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		GD.Print("Bite attack is ready!");
 	}
-	
 
-
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-	}
+	// You can override damage or effects here
 }
