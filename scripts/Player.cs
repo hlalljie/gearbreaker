@@ -7,6 +7,10 @@ public partial class Player : CharacterBody2D
 	public int Health = 100; // Our Player's Health
 
 	private Camera2D Camera;
+	
+	private bool isInvincible = false; // ✅ Prevents repeated damage
+	private float invincibleTime = 1.0f; // ✅ Time (in seconds) before player can be hit again
+
 
 	public override void _EnterTree()
 	{
@@ -79,19 +83,29 @@ public partial class Player : CharacterBody2D
 	[Rpc]
 	public void TakeDamage(int damage)
 	{
-		if (!IsMultiplayerAuthority())
+		if (isInvincible) // ✅ Ignore damage if invincible
 		{
-			GD.Print("Not the authority, skipping damage.");
+			GD.Print("🚫 Player is invincible. No damage taken.");
 			return;
 		}
 
-		GD.Print($"Player health before: {Health}");
+		GD.Print($"🛡️ TakeDamage called with damage: {damage}");
 		Health -= damage;
-		GD.Print($"Player took {damage} damage! Health after: {Health}");
+		GD.Print($"💔 Player took {damage} damage! Health after: {Health}");
 
 		if (Health <= 0)
 		{
 			Die();
+		}
+		else
+		{
+			// ✅ Activate invincibility and set a timer to turn it off
+			isInvincible = true;
+			GetTree().CreateTimer(invincibleTime).Timeout += () =>
+			{
+				isInvincible = false;
+				GD.Print("🟢 Player is vulnerable again.");
+			};
 		}
 	}
 
