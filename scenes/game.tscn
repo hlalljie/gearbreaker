@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://cgsgaqigbenpx"]
+[gd_scene load_steps=6 format=3 uid="uid://cgsgaqigbenpx"]
 
 [ext_resource type="Script" path="res://scripts/Game.cs" id="1_gy1k2"]
 [ext_resource type="PackedScene" uid="uid://c1efuotnnbnvj" path="res://scenes/map.tscn" id="2_0qvsn"]
+[ext_resource type="PackedScene" uid="uid://dt06cqf4btwbq" path="res://scenes/bite.tscn" id="3_assw3"]
 
 [sub_resource type="Gradient" id="Gradient_pnbyx"]
 colors = PackedColorArray(0.362829, 0.36283, 0.362829, 1, 0.0798, 0.239907, 0.38, 1)
@@ -26,6 +27,10 @@ script = ExtResource("1_gy1k2")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -71.0
+offset_top = -67.0
+offset_right = -71.0
+offset_bottom = -67.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("GradientTexture2D_xdykf")
@@ -74,6 +79,9 @@ alignment = 1
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://scenes/player.tscn")
 spawn_path = NodePath("..")
+
+[node name="Bite" parent="." instance=ExtResource("3_assw3")]
+position = Vector2(-200, 272)
 
 [connection signal="pressed" from="MenuCanvas/MainMenu/MarginContainer/VBoxContainer/HostButton" to="." method="OnHostButtonPressed"]
 [connection signal="pressed" from="MenuCanvas/MainMenu/MarginContainer/VBoxContainer/JoinButton" to="." method="OnJoinButtonPressed"]

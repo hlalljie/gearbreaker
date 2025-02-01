@@ -51,6 +51,13 @@ public partial class Player : CharacterBody2D
 		MoveAndSlide();
 	}
 
+	public void OnHurtBoxEntered(Area2D area)
+	{
+		if (area.IsInGroup("attack")){
+			GD.Print("Attacked");
+		}
+	}
+
 	private int GetPlayerId()
 	{
 		string numberPart = Name.ToString().Replace("Player", "");

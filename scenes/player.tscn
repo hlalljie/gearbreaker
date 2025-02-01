@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://bsqqij35kkvxw"]
+[gd_scene load_steps=6 format=3 uid="uid://bsqqij35kkvxw"]
 
 [ext_resource type="Script" path="res://scripts/Player.cs" id="1_vglux"]
 [ext_resource type="Texture2D" uid="uid://ppi1enpjvknp" path="res://assets/placeholders/green_tile_placeholder.png" id="2_52jj1"]
@@ -8,11 +8,16 @@ properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wlokx"]
+size = Vector2(30, 30)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3o4fx"]
+size = Vector2(32, 34)
+
 [node name="Player" type="CharacterBody2D"]
 z_index = 100
+collision_layer = 0
 script = ExtResource("1_vglux")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 
 [node name="Camera" type="Camera2D" parent="."]
 
@@ -21,3 +26,15 @@ texture = ExtResource("2_52jj1")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_vms0b")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_wlokx")
+
+[node name="AttackHolder" type="Node2D" parent="."]
+
+[node name="HurtBox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+shape = SubResource("RectangleShape2D_3o4fx")
+
+[connection signal="area_entered" from="HurtBox" to="." method="OnHurtBoxEntered"]
